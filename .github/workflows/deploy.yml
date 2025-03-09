@@ -5,37 +5,32 @@ on:
     branches:
       - main  # Trigger deployment when changes are pushed to the main branch
 
+permissions:
+  contents: write  # This is important - it gives the workflow permission to write to your repository
+
 jobs:
   deploy:
-    runs-on: ubuntu-latest  # Running on Ubuntu
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
-      with:
-        fetch-depth: 0  # Fetch the full history so the deploy can be done properly
+      uses: actions/checkout@v3
 
     - name: Set up Node.js
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
-        node-version: '16'  # Specify Node version to match your setup
+        node-version: '16'
+        cache: 'npm'  # Add caching for faster builds
 
     - name: Install dependencies
-      run: |
-        npm install
-        npm run build  # Assuming the build process outputs to the 'dist' folder
+      run: npm ci  # More reliable than npm install for CI environments
+
+    - name: Build project
+      run: npm run build  # Assuming this builds to a 'dist' directory
 
     - name: Deploy to GitHub Pages
-      run: |
-        git config --global user.email "you@example.com"
-        git config --global user.name "Your Name"
-        git remote add origin https://github.com/${{ github.repository }}.git
-        git fetch origin
-        git checkout --orphan gh-pages  # Create or checkout the gh-pages branch
-        git rm -rf .  # Clean up any existing files
-        cp -r dist/* .  # Copy the built files from 'dist' to the root
-        git add .
-        git commit -m "Deploy to GitHub Pages"
-        git push --force origin gh-pages  # Force push to the gh-pages branch
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Automatically handled for authentication
+      uses: JamesIves/github-pages-deploy-action@v4
+      with:
+        folder: dist  # The folder the action should deploy
+        branch: gh-pages  # The branch the action should deploy to
+        # No need to specify GITHUB_TOKEN as it's automatically available with the permissions above
