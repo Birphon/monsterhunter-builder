@@ -1,7 +1,16 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
+  "compilerOptions": {
+    "target": "es5",              // Transpile TypeScript to ES5 for compatibility
+    "lib": ["dom", "es6"],        // Includes DOM and ES6 APIs
+    "jsx": "react",               // Enables JSX support in TypeScript
+    "outDir": "./build",          // Outputs build files to the "build" folder
+    "baseUrl": "./src",           // Uses "src" folder as the base for resolving modules
+    "strict": true,               // Enable all strict type-checking options
+    "esModuleInterop": true,      // Enables compatibility with non-ES module imports
+    "skipLibCheck": true,         // Skip checking library files for faster compilation
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": [
+    "src/**/*"                    // Includes all TypeScript files in the "src" folder
   ]
 }
