@@ -1,7 +1,16 @@
-export default function App() {
+// src/App.tsx
+import React from 'react';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import MonsterEncyclopedia from './pages/MonsterEncyclopedia';
+
+const App: React.FC = () => {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-900 text-white text-xl">
-      Monster Hunter Builder - Setup Complete!
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<MonsterEncyclopedia />} />
+      </Routes>
+    </Router>
   );
-}
+};
+
+export default App;
