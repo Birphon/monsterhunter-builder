@@ -1,0 +1,41 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main  # Trigger deployment when changes are pushed to the main branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest  # Running on Ubuntu
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0  # Fetch the full history so the deploy can be done properly
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16'  # Specify Node version to match your setup
+
+    - name: Install dependencies
+      run: |
+        npm install
+        npm run build  # Assuming the build process outputs to the 'dist' folder
+
+    - name: Deploy to GitHub Pages
+      run: |
+        git config --global user.email "you@example.com"
+        git config --global user.name "Your Name"
+        git remote add origin https://github.com/${{ github.repository }}.git
+        git fetch origin
+        git checkout --orphan gh-pages  # Create or checkout the gh-pages branch
+        git rm -rf .  # Clean up any existing files
+        cp -r dist/* .  # Copy the built files from 'dist' to the root
+        git add .
+        git commit -m "Deploy to GitHub Pages"
+        git push --force origin gh-pages  # Force push to the gh-pages branch
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Automatically handled for authentication
