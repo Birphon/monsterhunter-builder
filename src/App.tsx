@@ -12,8 +12,5 @@ const App: React.FC = () => {
     </Router>
   );
 };
-// TEST COMMENT LOL
-// TEST TWO
-// TEST THREE
-// Fixed?
+
 export default App;
